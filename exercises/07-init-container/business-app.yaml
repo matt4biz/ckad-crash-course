@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bizapp
+spec:
+  containers:
+  - image: bmuschko/nodejs-read-config:1.0.0
+    name: web
+    volumeMounts:
+    - name: config
+      mountPath: /usr/shared/app
+  initContainers:
+  - image: busybox
+    name: configurer
+    command: ["wget"]
+    args: ["-O", "/usr/shared/app/config.json", "https://raw.githubusercontent.com/bmuschko/ckad-crash-course/master/exercises/07-init-container/app/config/config.json"]
+    volumeMounts:
+    - name: config
+      mountPath: /usr/shared/app
+  volumes:
+  - name: config
+    emptyDir: {}
